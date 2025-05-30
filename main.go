@@ -6,12 +6,13 @@ import (
 	"log"
 	"os"
 
+	"github.com/gofiber/contrib/swagger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/joho/godotenv"
 	"github.com/lzy3me/open-fs-pos-main/routes"
-	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 func main() {
@@ -43,6 +44,14 @@ func main() {
 		},
 	})
 
+	cfg := swagger.Config{
+		BasePath: "/",
+		FilePath: "./swagger.json",
+		Path:     "docs",
+		Title:    "Swagger API Docs",
+	}
+
+	app.Use(swagger.New(cfg))
 	app.Use(recover.New())
 	app.Use(logger.New())
 	app.Use(cors.New(cors.Config{
